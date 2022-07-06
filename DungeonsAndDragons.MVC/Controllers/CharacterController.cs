@@ -81,6 +81,7 @@ namespace DungeonsAndDragons.MVC.Controllers
 
             var model = new CharacterDetailView
             {
+                CharacterId = character.Id,
                 Name = character.Name,
                 Race = service.FindRaceById(character.RaceId).Name,
                 Class = service.FindClassById(character.ClassId).Name,
@@ -103,7 +104,8 @@ namespace DungeonsAndDragons.MVC.Controllers
             var service = CreateCharacterService();
             var detail = service.FindCharacterById(id);
             var model = new CharacterEdit
-            {
+            { 
+                CharacterId = id,
                 Name = detail.Name,
                 Level = detail.Level,
                 Strength = detail.Strength,
@@ -115,6 +117,27 @@ namespace DungeonsAndDragons.MVC.Controllers
                 Description = detail.Description
             };
             return View(model); 
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit (int id, CharacterEdit model)
+        {
+            if (!ModelState.IsValid) return View(model); //returns model if it's not valid
+
+            var service = CreateCharacterService();
+
+            model.CharacterId = id;
+
+            //checks to see if models changes can be saved
+            if(service.UpdateCharacter(model))
+            {
+                TempData["SaveResult"] = "Your character was updated."; //Message that will be sent to user
+                return RedirectToAction("Index"); //returns to Index page
+            }
+
+            ModelState.AddModelError("", "Your character could not be updated.");
+            return View(model);
         }
 
         private CharacterService CreateCharacterService()

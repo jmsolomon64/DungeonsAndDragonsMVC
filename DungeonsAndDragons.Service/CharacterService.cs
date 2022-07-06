@@ -79,6 +79,7 @@ namespace DungeonsAndDragons.Service
 
             return new CharacterDetailView
             {
+                CharacterId = entity.Id,
                 Name = entity.Name,
                 Race = FindRaceById(entity.RaceId).Name,
                 Class = FindClassById(entity.ClassId).Name,
@@ -112,6 +113,23 @@ namespace DungeonsAndDragons.Service
             }
 
             return entity;
+        }
+
+        public bool UpdateCharacter(CharacterEdit model)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == model.CharacterId); //Steps through context to the character by id
+
+            entity.Name = model.Name;
+            entity.Level = model.Level;
+            entity.Strength = model.Strength;
+            entity.Dexterity = model.Dexterity;
+            entity.Consitution = model.Consitution;
+            entity.Inteligence = model.Inteligence;
+            entity.Wisdom = model.Wisdom;
+            entity.Charisma = model.Charisma;
+            entity.Description = model.Description;
+
+            return _ctx.SaveChanges() == 1;
         }
     }
 }

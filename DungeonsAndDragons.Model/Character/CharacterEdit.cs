@@ -10,6 +10,8 @@ namespace DungeonsAndDragons.Model.Character
     public class CharacterEdit
     {
         [Required]
+        public int CharacterId { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public int Level { get; set; }
