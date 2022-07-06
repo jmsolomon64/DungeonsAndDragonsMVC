@@ -7,18 +7,11 @@ using System.Threading.Tasks;
 
 namespace DungeonsAndDragons.Model.Character
 {
-    public class CharacterCreate
+    public class CharacterEdit
     {
         [Required]
         public string Name { get; set; }
         [Required]
-        [Display(Name="Race")]
-        public int RaceId { get; set; }
-        [Required]
-        [Display(Name="Class")]
-        public int ClassId { get; set; }
-        [Required]
-        [Range(1, 20)]
         public int Level { get; set; }
         [Required]
         [Range(1, 24)]

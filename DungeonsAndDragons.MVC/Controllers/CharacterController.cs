@@ -97,6 +97,26 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
+        //GET
+        public ActionResult Edit (int id)
+        {
+            var service = CreateCharacterService();
+            var detail = service.FindCharacterById(id);
+            var model = new CharacterEdit
+            {
+                Name = detail.Name,
+                Level = detail.Level,
+                Strength = detail.Strength,
+                Dexterity = detail.Dexterity,
+                Consitution = detail.Consitution,
+                Inteligence = detail.Inteligence,
+                Wisdom = detail.Wisdom,
+                Charisma = detail.Charisma,
+                Description = detail.Description
+            };
+            return View(model); 
+        }
+
         private CharacterService CreateCharacterService()
         {
             ClaimsPrincipal currentUser = this.User;

@@ -38,8 +38,8 @@ namespace DungeonsAndDragons.Service
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    RaceId = x.RaceId,
-                    ClassId = x.ClassId,
+                    Race = x.Race.Name,
+                    Class = x.Class.Name,
                     Level = x.Level
                 });
 
@@ -70,14 +70,34 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        public CharacterDetailView FindCharacterById(int id)
+        {
+            Character entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            if (entity == null) return null;
+
+
+            return new CharacterDetailView
+            {
+                Name = entity.Name,
+                Race = FindRaceById(entity.RaceId).Name,
+                Class = FindClassById(entity.ClassId).Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+        }
+
         public Race FindRaceById(int id)
         {
             Race entity = _ctx.Races.FirstOrDefault(x => x.Id == id);
 
-            if (entity == null)
-            {
-                return null;
-            }
+            if (entity == null) return null;
 
             return entity;            
         }

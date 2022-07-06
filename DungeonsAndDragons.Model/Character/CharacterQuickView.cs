@@ -10,8 +10,8 @@ namespace DungeonsAndDragons.Model.Character
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int RaceId { get; set; }
-        public int ClassId { get; set; }
+        public string Race { get; set; }
+        public string Class { get; set; }
         public int Level { get; set; }
     }
 }
