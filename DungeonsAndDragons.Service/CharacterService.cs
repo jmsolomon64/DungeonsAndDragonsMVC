@@ -70,8 +70,30 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
-        public CharacterDetailView FindCharacterById(int id)
+        public CharacterEdit CharacterEditGenerator(int id)
         {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+            var model = new CharacterEdit
+            {
+                CharacterId = id,
+                Name = entity.Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+
+            return model;
+        }
+
+        public CharacterDetailView FindCharacterById(int? id)
+        {
+            if(id == null) return null;
+
             Character entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
 
             if (entity == null) return null;
@@ -128,6 +150,15 @@ namespace DungeonsAndDragons.Service
             entity.Wisdom = model.Wisdom;
             entity.Charisma = model.Charisma;
             entity.Description = model.Description;
+
+            return _ctx.SaveChanges() == 1;
+        }
+
+        public bool DeleteCharacter(int id)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            _ctx.Characters.Remove(entity);
 
             return _ctx.SaveChanges() == 1;
         }

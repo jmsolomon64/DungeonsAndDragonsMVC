@@ -20,6 +20,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         //Index GET
+        [ActionName("Index")]
         public IActionResult Index()
         {
             ClaimsPrincipal currentUser = this.User;
@@ -32,6 +33,7 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
+        [ActionName("Create")]
         public IActionResult Create()
         {
             ViewData["RaceId"] = new SelectList(_ctx.Races, "Id", "Name");
@@ -40,6 +42,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         [HttpPost]
+        [ActionName("Create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CharacterCreate model)
         {
@@ -63,6 +66,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         //GET
+        [ActionName("Details")]
         public IActionResult Details(int? id)
         {
             if(id == null)
@@ -70,56 +74,25 @@ namespace DungeonsAndDragons.MVC.Controllers
                 return NotFound();
             }
 
-            var character = _ctx.Characters.FirstOrDefault(x => id == x.Id);
-
-            if(character == null)
-            {
-                return NotFound();
-            }
-
             var service = CreateCharacterService();
 
-            var model = new CharacterDetailView
-            {
-                CharacterId = character.Id,
-                Name = character.Name,
-                Race = service.FindRaceById(character.RaceId).Name,
-                Class = service.FindClassById(character.ClassId).Name,
-                Level = character.Level,
-                Strength = character.Strength,
-                Dexterity = character.Dexterity,
-                Consitution = character.Consitution,
-                Inteligence = character.Inteligence,
-                Wisdom = character.Wisdom,
-                Charisma = character.Charisma,
-                Description = character.Description,
-            };
+            var model = service.FindCharacterById(id);
 
             return View(model);
         }
 
         //GET
+        [ActionName("Edit")]
         public ActionResult Edit (int id)
         {
             var service = CreateCharacterService();
-            var detail = service.FindCharacterById(id);
-            var model = new CharacterEdit
-            { 
-                CharacterId = id,
-                Name = detail.Name,
-                Level = detail.Level,
-                Strength = detail.Strength,
-                Dexterity = detail.Dexterity,
-                Consitution = detail.Consitution,
-                Inteligence = detail.Inteligence,
-                Wisdom = detail.Wisdom,
-                Charisma = detail.Charisma,
-                Description = detail.Description
-            };
+            var model = service.CharacterEditGenerator(id);
+            
             return View(model); 
         }
 
         [HttpPost]
+        [ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit (int id, CharacterEdit model)
         {
@@ -137,6 +110,31 @@ namespace DungeonsAndDragons.MVC.Controllers
             }
 
             ModelState.AddModelError("", "Your character could not be updated.");
+            return View(model);
+        }
+
+        //GET
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
+        {
+            var service = CreateCharacterService();
+            var model = service.FindCharacterById(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, CharacterDetailView model)
+        {
+            var service = CreateCharacterService();
+            if(service.DeleteCharacter(id))
+            {
+                TempData["SaveResult"] = "Your character was deleted";
+                return RedirectToAction("Index");
+            }
+
             return View(model);
         }
 
