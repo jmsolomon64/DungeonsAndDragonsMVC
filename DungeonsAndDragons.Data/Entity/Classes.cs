@@ -17,6 +17,8 @@ namespace DungeonsAndDragons.Data.Entity
         [MaxLength(10000)]
         public string Description { get; set; }
 
+        public bool IsActive { get; set; }
+
         public ICollection<Character> Characters { get; set; }
 
         public Classes()
