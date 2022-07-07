@@ -20,6 +20,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         //Index GET
+        [ActionName("Index")]
         public IActionResult Index()
         {
             ClaimsPrincipal currentUser = this.User;
@@ -32,6 +33,7 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
+        [ActionName("Create")]
         public IActionResult Create()
         {
             ViewData["RaceId"] = new SelectList(_ctx.Races, "Id", "Name");
@@ -40,6 +42,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         [HttpPost]
+        [ActionName("Create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CharacterCreate model)
         {
@@ -63,6 +66,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         //GET
+        [ActionName("Details")]
         public IActionResult Details(int? id)
         {
             if(id == null)
@@ -70,29 +74,66 @@ namespace DungeonsAndDragons.MVC.Controllers
                 return NotFound();
             }
 
-            var character = _ctx.Characters.FirstOrDefault(x => id == x.Id);
+            var service = CreateCharacterService();
 
-            if(character == null)
-            {
-                return NotFound();
-            }
+            var model = service.FindCharacterById(id);
+
+            return View(model);
+        }
+
+        //GET
+        [ActionName("Edit")]
+        public ActionResult Edit (int id)
+        {
+            var service = CreateCharacterService();
+            var model = service.CharacterEditGenerator(id);
+            
+            return View(model); 
+        }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit (int id, CharacterEdit model)
+        {
+            if (!ModelState.IsValid) return View(model); //returns model if it's not valid
 
             var service = CreateCharacterService();
 
-            var model = new CharacterDetailView
+            model.CharacterId = id;
+
+            //checks to see if models changes can be saved
+            if(service.UpdateCharacter(model))
             {
-                Name = character.Name,
-                Race = service.FindRaceById(character.RaceId).Name,
-                Class = service.FindClassById(character.ClassId).Name,
-                Level = character.Level,
-                Strength = character.Strength,
-                Dexterity = character.Dexterity,
-                Consitution = character.Consitution,
-                Inteligence = character.Inteligence,
-                Wisdom = character.Wisdom,
-                Charisma = character.Charisma,
-                Description = character.Description,
-            };
+                TempData["SaveResult"] = "Your character was updated."; //Message that will be sent to user
+                return RedirectToAction("Index"); //returns to Index page
+            }
+
+            ModelState.AddModelError("", "Your character could not be updated.");
+            return View(model);
+        }
+
+        //GET
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
+        {
+            var service = CreateCharacterService();
+            var model = service.FindCharacterById(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, CharacterDetailView model)
+        {
+            var service = CreateCharacterService();
+            if(service.DeleteCharacter(id))
+            {
+                TempData["SaveResult"] = "Your character was deleted";
+                return RedirectToAction("Index");
+            }
 
             return View(model);
         }
