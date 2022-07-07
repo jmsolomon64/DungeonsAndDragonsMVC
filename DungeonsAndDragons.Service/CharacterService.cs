@@ -18,6 +18,7 @@ namespace DungeonsAndDragons.Service
         public CharacterService(Guid userId, ApplicationDbContext context)
         {
             _ctx = context;
+            _userId = userId;
         }
 
         public bool SetUserId(Guid userId)
