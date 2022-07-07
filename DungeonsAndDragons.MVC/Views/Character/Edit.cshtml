@@ -1,0 +1,73 @@
+﻿@model DungeonsAndDragons.Model.Character.CharacterEdit
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>CharacterEdit</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Strength" class="control-label"></label>
+                <input asp-for="Strength" class="form-control" />
+                <span asp-validation-for="Strength" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Dexterity" class="control-label"></label>
+                <input asp-for="Dexterity" class="form-control" />
+                <span asp-validation-for="Dexterity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Consitution" class="control-label"></label>
+                <input asp-for="Consitution" class="form-control" />
+                <span asp-validation-for="Consitution" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Inteligence" class="control-label"></label>
+                <input asp-for="Inteligence" class="form-control" />
+                <span asp-validation-for="Inteligence" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Wisdom" class="control-label"></label>
+                <input asp-for="Wisdom" class="form-control" />
+                <span asp-validation-for="Wisdom" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Charisma" class="control-label"></label>
+                <input asp-for="Charisma" class="form-control" />
+                <span asp-validation-for="Charisma" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

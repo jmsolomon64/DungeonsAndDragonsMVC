@@ -38,8 +38,8 @@ namespace DungeonsAndDragons.Service
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    RaceId = x.RaceId,
-                    ClassId = x.ClassId,
+                    Race = x.Race.Name,
+                    Class = x.Class.Name,
                     Level = x.Level
                 });
 
@@ -70,14 +70,57 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        public CharacterEdit CharacterEditGenerator(int id)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+            var model = new CharacterEdit
+            {
+                CharacterId = id,
+                Name = entity.Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+
+            return model;
+        }
+
+        public CharacterDetailView FindCharacterById(int? id)
+        {
+            if(id == null) return null;
+
+            Character entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            if (entity == null) return null;
+
+
+            return new CharacterDetailView
+            {
+                CharacterId = entity.Id,
+                Name = entity.Name,
+                Race = FindRaceById(entity.RaceId).Name,
+                Class = FindClassById(entity.ClassId).Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+        }
+
         public Race FindRaceById(int id)
         {
             Race entity = _ctx.Races.FirstOrDefault(x => x.Id == id);
 
-            if (entity == null)
-            {
-                return null;
-            }
+            if (entity == null) return null;
 
             return entity;            
         }
@@ -92,6 +135,32 @@ namespace DungeonsAndDragons.Service
             }
 
             return entity;
+        }
+
+        public bool UpdateCharacter(CharacterEdit model)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == model.CharacterId); //Steps through context to the character by id
+
+            entity.Name = model.Name;
+            entity.Level = model.Level;
+            entity.Strength = model.Strength;
+            entity.Dexterity = model.Dexterity;
+            entity.Consitution = model.Consitution;
+            entity.Inteligence = model.Inteligence;
+            entity.Wisdom = model.Wisdom;
+            entity.Charisma = model.Charisma;
+            entity.Description = model.Description;
+
+            return _ctx.SaveChanges() == 1;
+        }
+
+        public bool DeleteCharacter(int id)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            _ctx.Characters.Remove(entity);
+
+            return _ctx.SaveChanges() == 1;
         }
     }
 }
