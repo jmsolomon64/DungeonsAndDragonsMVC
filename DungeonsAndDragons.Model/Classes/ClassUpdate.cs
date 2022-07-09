@@ -5,25 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DungeonsAndDragons.Data.Entity
+namespace DungeonsAndDragons.Model.Classes
 {
-    public class Classes
+    public class ClassUpdate
     {
-        [Key]
-        public int Id { get; set; }
+        public int ClassId { get; set; }
         [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
+
         [Required]
         [MaxLength(10000)]
         public string Description { get; set; }
-
-        public bool IsActive { get; set; }
-
-        public ICollection<Character> Characters { get; set; }
-
-        public Classes()
-        {
-            Characters = new List<Character>();
-        }
     }
 }
