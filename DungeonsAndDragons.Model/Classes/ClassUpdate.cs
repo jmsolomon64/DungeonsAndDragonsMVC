@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DungeonsAndDragons.Model.Class
+namespace DungeonsAndDragons.Model.Classes
 {
-    public class ClassDetails
+    public class ClassUpdate
     {
         public int ClassId { get; set; }
+        [Required]
+        [MaxLength(100)]
         public string Name { get; set; }
+
+        [Required]
+        [MaxLength(10000)]
         public string Description { get; set; }
     }
 }

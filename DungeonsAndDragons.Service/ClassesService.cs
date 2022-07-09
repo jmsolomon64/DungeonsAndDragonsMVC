@@ -1,6 +1,7 @@
 ﻿using DungeonsAndDragons.Data;
 using DungeonsAndDragons.Data.Entity;
 using DungeonsAndDragons.Model.Class;
+using DungeonsAndDragons.Model.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace DungeonsAndDragons.Service
 
         public bool CreateClasses(ClassCreate model)
         {
-            Classes entity = new Classes()
+            var entity = new Classes()
             {
                 Name = model.Name,
                 Description = model.Description,
@@ -35,10 +36,11 @@ namespace DungeonsAndDragons.Service
 
         public ClassDetails ViewClass(int id)
         {
-            Classes entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
 
             ClassDetails model = new ClassDetails()
             {
+                ClassId = entity.Id,
                 Name = entity.Name,
                 Description = entity.Description
             };
@@ -46,9 +48,9 @@ namespace DungeonsAndDragons.Service
             return model;
         }
 
-        public bool UpdateClass(int id, ClassCreate model)
+        public bool UpdateClass(int id, ClassUpdate model)
         {
-            Classes entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
             
             entity.Name = model.Name;
             entity.Description = model.Description;
@@ -58,7 +60,7 @@ namespace DungeonsAndDragons.Service
 
         public bool DeleteClass(int id)
         {
-            Classes entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
 
             _ctx.Classes.Remove(entity);
 
@@ -68,7 +70,7 @@ namespace DungeonsAndDragons.Service
         //Alternative to delete
         public bool DisableClass(int id)
         {
-            Classes entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
 
             if(entity.IsActive)
             {
@@ -81,10 +83,37 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        public IEnumerable<ClassDetails> GetClasses()
+        {
+            //I want all Classes to be pulled from DB
+            var query = _ctx.Classes
+                .Select(x => new ClassDetails
+                {
+                    ClassId = x.Id,
+                    Name = x.Name,
+                    Description = x.Description
+                });
+
+            return query.ToArray();
+        }
+
+        public ClassUpdate GenerateClassUpdate(int id)
+        {
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+
+            var model = new ClassUpdate()
+            {
+                ClassId = id,
+                Name = entity.Name,
+                Description = entity.Description
+            };
+
+            return model;
+        }
 
         public Classes FindClassById(int id)
         {
-            Classes entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
+            var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
 
             if (entity == null)
             {
