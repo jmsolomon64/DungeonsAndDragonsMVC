@@ -38,8 +38,13 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Create")]
         public IActionResult Create()
         {
-            ViewData["RaceId"] = new SelectList(_ctx.Races, "Id", "Name");
-            ViewData["ClassId"] = new SelectList(_ctx.Classes, "Id", "Name");
+            var service = CreateCharacterService();
+
+            ViewData["RaceId"] = new SelectList(service.RacesList(), "Id", "Name");
+            ViewData["ClassId"] = new SelectList(service.ClassesList(), "Id", "Name");
+            //ViewData["RaceId"] = service.RacesList();
+            //ViewData["ClassId"] = service.ClassesList();
+
             return View();
         }
 

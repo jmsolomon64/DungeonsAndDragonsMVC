@@ -165,5 +165,16 @@ namespace DungeonsAndDragons.Service
 
             return _ctx.SaveChanges() == 1;
         }
+
+        public List<Classes> ClassesList()
+        {
+            var classList = _ctx.Classes.ToList();
+            return classList;
+        }
+        public List<Race> RacesList()
+        {
+            var raceList = _ctx.Races.ToList();
+            return raceList;
+        }
     }
 }
