@@ -5,26 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DungeonsAndDragons.Data.Entity
+namespace DungeonsAndDragons.Model.Race
 {
-    public class Race
+    public class RaceEdit
     {
-        [Key]
-        public int Id { get; set; }
+        public int RaceId { get; set; }
+
         [Required]
         public string Name { get; set; }
-        [Required]
-        [MaxLength(10000)]
-        public string Description { get; set; }
 
+        [Required]
+        [StringLength(10000)]
+        public string Description { get; set; }
         [Required]
         public bool IsActive { get; set; }
-
-        public ICollection<Character> Characters { get; set; } //Denotes a many relationship
-
-        public Race()
-        {
-            Characters = new HashSet<Character>();
-        }
     }
 }
