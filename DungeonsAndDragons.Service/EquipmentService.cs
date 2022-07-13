@@ -13,7 +13,7 @@ namespace DungeonsAndDragons.Service
     {
         private readonly ApplicationDbContext _ctx;
         private readonly Guid _userId;
-        public EquipmentService(ApplicationDbContext ctx, Guid userId)
+        public EquipmentService(Guid userId, ApplicationDbContext ctx)
         {
             _ctx = ctx;
             _userId = userId;
@@ -32,6 +32,21 @@ namespace DungeonsAndDragons.Service
             });
 
             return query.ToArray();
+        }
+        public EquipmentDetail ViewItem(int? id)
+        {
+            var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);
+
+            EquipmentDetail model = new EquipmentDetail
+            {
+                EquipmentId = entity.Id,
+                Name = entity.Name,
+                Weight = entity.Weight,
+                Cost = entity.Cost,
+                Description = entity.Description
+            };
+
+            return model;
         }
 
         //I want to add a method that pulls all weapons in a  players inventory
@@ -68,6 +83,22 @@ namespace DungeonsAndDragons.Service
 
             _ctx.Items.Remove(entity);
             return _ctx.SaveChanges() == 1;
+        }
+
+        //Extra methods
+        public EquipmentUpdate GenerateUpdateEquipment(int id)
+        {
+            var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);
+            var model = new EquipmentUpdate
+            {
+                EquipmentId = id,
+                Name = entity.Name,
+                Weight = entity.Weight,
+                Cost = entity.Cost,
+                Description = entity.Description
+            };
+
+            return model;
         }
     }
 }
