@@ -42,7 +42,15 @@ namespace DungeonsAndDragons.Data.Entity
         public int Wisdom { get; set; }
         [Required]
         public int Charisma { get; set; }
+
+        public virtual ICollection<Equipment> Inventory { get; set; }
+
         [MaxLength(50000)]
         public string Description { get; set; }
+
+        public Character()
+        {
+            Inventory = new List<Equipment>();
+        }
     }
 }
