@@ -122,13 +122,11 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
-        private EquipmentService CreateEquipmentService()
+        private Guid GetUserId()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new EquipmentService(currentUserId, _ctx);
-            return service;
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
         }
     }
 }
