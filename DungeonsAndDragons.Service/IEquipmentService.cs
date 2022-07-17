@@ -4,6 +4,7 @@ namespace DungeonsAndDragons.Service
 {
     public interface IEquipmentService
     {
+        bool SetUserId(Guid userId);
         bool CreateEquipment(EquipmentCreate model);
         bool DeleteEquipment(int id);
         EquipmentUpdate GenerateUpdateEquipment(int id);

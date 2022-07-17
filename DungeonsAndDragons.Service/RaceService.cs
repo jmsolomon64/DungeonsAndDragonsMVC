@@ -9,15 +9,22 @@ using System.Threading.Tasks;
 
 namespace DungeonsAndDragons.Service
 {
-    public class RaceService
+    public class RaceService : IRaceService
     {
         private Guid _userId;
         private readonly ApplicationDbContext _ctx;
 
-        public RaceService(Guid userId, ApplicationDbContext ctx)
+        public RaceService(ApplicationDbContext ctx)
         {
-            _userId = userId;
             _ctx = ctx;
+        }
+
+        public bool SetUserId(Guid userId)
+        {
+            if (userId == null) return false;
+
+            _userId = userId;
+            return true;
         }
 
         public IEnumerable<RaceDetails> GetRaces()
@@ -52,7 +59,7 @@ namespace DungeonsAndDragons.Service
             var entity = new Race()
             {
                 Name = model.Name,
-                Description= model.Description,
+                Description = model.Description,
                 IsActive = true
             };
 

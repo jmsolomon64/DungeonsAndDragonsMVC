@@ -9,19 +9,18 @@ namespace DungeonsAndDragons.MVC.Controllers
 {
     public class RaceController : Controller
     {
-        private readonly ApplicationDbContext _ctx;
+        private readonly IRaceService _race;
 
-        public RaceController(ApplicationDbContext ctx)
+        public RaceController(IRaceService race)
         {
-            _ctx = ctx;
+            _race = race;
         }
-
 
         // GET: RaceController
         public ActionResult Index()
         {
-            var service = CreateRaceService();
-            var models = service.GetRaces();
+            _race.SetUserId(GetUserId());
+            var models = _race.GetRaces();
             
             return View(models);
         }
@@ -29,8 +28,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         // GET: RaceController/Details/5
         public ActionResult Details(int id)
         {
-            var service = CreateRaceService();
-            var model = service.ViewRace(id);
+            _race.SetUserId(GetUserId());
+            var model = _race.ViewRace(id);
 
             return View(model);
         }
@@ -48,9 +47,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateRaceService();
+            _race.SetUserId(GetUserId());
 
-            if(service.CreateRace(model))
+            if (_race.CreateRace(model))
             {
                 TempData["SaveResult"] = "Your class was created";
                 return RedirectToAction("Index");
@@ -64,8 +63,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         // GET: RaceController/Edit/5
         public ActionResult Edit(int id)
         {
-            var service = CreateRaceService();
-            var model = service.GenerateRaceEdit(id);
+            _race.SetUserId(GetUserId());
+            var model = _race.GenerateRaceEdit(id);
 
             return View(model);
         }
@@ -77,10 +76,10 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateRaceService();
+            _race.SetUserId(GetUserId());
             model.RaceId = id;
 
-            if(service.EditRace(id, model))
+            if(_race.EditRace(id, model))
             {
                 TempData["SaveResult"] = "Race was updated.";
                 return RedirectToAction("Index");
@@ -93,8 +92,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         // GET: RaceController/Delete/5
         public ActionResult Delete(int id)
         {
-            var service = CreateRaceService();
-            var model = service.ViewRace(id);
+            _race.SetUserId(GetUserId());
+            var model = _race.ViewRace(id);
 
             return View(model);
         }
@@ -104,8 +103,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, RaceDetails model)
         {
-            var service = CreateRaceService();
-            if(service.DeleteRace(id))
+            _race.SetUserId(GetUserId());
+            if (_race.DeleteRace(id))
             {
                 TempData["SaveResult"] = "Race was deleted";
                 return RedirectToAction("Index");
@@ -114,13 +113,11 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
-        private RaceService CreateRaceService()
+        private Guid GetUserId()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new RaceService(currentUserId, _ctx);
-            return service;
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
         }
     }
 }

@@ -17,6 +17,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ICharacterService, CharacterService>();
 builder.Services.AddScoped<IClassesService, ClassesService>();
+builder.Services.AddScoped<IRaceService, RaceService>();
+builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 
 var app = builder.Build();
 
