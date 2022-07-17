@@ -10,15 +10,22 @@ using System.Threading.Tasks;
 
 namespace DungeonsAndDragons.Service
 {
-    public class ClassesService
+    public class ClassesService : IClassesService
     {
-        private readonly Guid _id;
+        private Guid _id;
         private readonly ApplicationDbContext _ctx;
 
-        public ClassesService(Guid id, ApplicationDbContext ctx)
+        public ClassesService(ApplicationDbContext ctx)
         {
-            _id = id;
             _ctx = ctx;
+        }
+
+        public bool SetUserId(Guid userId)
+        {
+            if (userId == null) return false;
+
+            _id = userId;
+            return true;
         }
 
         public bool CreateClasses(ClassCreate model)
@@ -51,7 +58,7 @@ namespace DungeonsAndDragons.Service
         public bool UpdateClass(int id, ClassUpdate model)
         {
             var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
-            
+
             entity.Name = model.Name;
             entity.Description = model.Description;
 
@@ -72,10 +79,11 @@ namespace DungeonsAndDragons.Service
         {
             var entity = _ctx.Classes.FirstOrDefault(x => x.Id == id);
 
-            if(entity.IsActive)
+            if (entity.IsActive)
             {
                 entity.IsActive = false;
-            } else
+            }
+            else
             {
                 entity.IsActive = true;
             }

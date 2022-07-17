@@ -9,14 +9,21 @@ using System.Threading.Tasks;
 
 namespace DungeonsAndDragons.Service
 {
-    public class EquipmentService
+    public class EquipmentService : IEquipmentService
     {
         private readonly ApplicationDbContext _ctx;
-        private readonly Guid _userId;
-        public EquipmentService(Guid userId, ApplicationDbContext ctx)
+        private Guid _userId;
+        public EquipmentService(ApplicationDbContext ctx)
         {
             _ctx = ctx;
+        }
+
+        public bool SetUserId(Guid userId)
+        {
+            if (userId == null) return false;
+
             _userId = userId;
+            return true;
         }
 
         //CRUD Services

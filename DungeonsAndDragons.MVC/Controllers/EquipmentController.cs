@@ -9,18 +9,19 @@ namespace DungeonsAndDragons.MVC.Controllers
 {
     public class EquipmentController : Controller
     {
-        private readonly ApplicationDbContext _ctx;
-        public EquipmentController(ApplicationDbContext ctx)
+        private readonly IEquipmentService _equipment;
+
+        public EquipmentController(IEquipmentService equipment)
         {
-            _ctx = ctx;
+            _equipment = equipment;
         }
 
         // GET: EquipmentController
         [ActionName("Index")]
         public ActionResult Index()
         {
-            var service = CreateEquipmentService();
-            var model = service.GetAllEquipment();
+            _equipment.SetUserId(GetUserId());
+            var model = _equipment.GetAllEquipment();
 
             return View(model);
         }
@@ -31,8 +32,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (id == null) return NotFound();
 
-            var service = CreateEquipmentService();
-            var model = service.ViewItem(id);
+            _equipment.SetUserId(GetUserId());
+            var model = _equipment.ViewItem(id);
 
             return View(model);
         }
@@ -52,9 +53,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateEquipmentService();
+            _equipment.SetUserId(GetUserId());
 
-            if(service.CreateEquipment(model))
+            if(_equipment.CreateEquipment(model))
             {
                 TempData["SaveResult"] = "Your character was created.";
                 return RedirectToAction("Index");
@@ -68,8 +69,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Edit")]
         public ActionResult Edit(int id)
         {
-            var service = CreateEquipmentService();
-            var model = service.GenerateUpdateEquipment(id);
+            _equipment.SetUserId(GetUserId());
+            var model = _equipment.GenerateUpdateEquipment(id);
 
             return View(model);
         }
@@ -82,10 +83,10 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateEquipmentService();
+            _equipment.SetUserId(GetUserId());
             model.EquipmentId = id;
 
-            if(service.UpdateEquipment(model))
+            if(_equipment.UpdateEquipment(model))
             {
                 TempData["SaveResults"] = "Equipment was updated.";
                 return RedirectToAction("Index");
@@ -99,8 +100,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Delete")]
         public ActionResult Delete(int id)
         {
-            var service = CreateEquipmentService();
-            var model = service.ViewItem(id);
+            _equipment.SetUserId(GetUserId());
+            var model = _equipment.ViewItem(id);
 
             return View(model);
         }
@@ -111,9 +112,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, EquipmentDetail model)
         {
-            var service = CreateEquipmentService();
+            _equipment.SetUserId(GetUserId());
 
-            if(service.DeleteEquipment(id))
+            if(_equipment.DeleteEquipment(id))
             {
                 TempData["SaveResults"] = "Equipment Deleted";
                 return RedirectToAction("Index");
@@ -122,13 +123,11 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
-        private EquipmentService CreateEquipmentService()
+        private Guid GetUserId()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new EquipmentService(currentUserId, _ctx);
-            return service;
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
         }
     }
 }
