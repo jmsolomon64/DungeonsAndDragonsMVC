@@ -14,5 +14,6 @@ namespace DungeonsAndDragons.Data
         public DbSet<Character> Characters { get; set; }
         public DbSet<Race> Races { get; set; }
         public DbSet<Classes> Classes { get; set; }
+        public DbSet<Equipment> Items { get; set; }
     }
 }

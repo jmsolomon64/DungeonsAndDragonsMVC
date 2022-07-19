@@ -11,24 +11,27 @@ namespace DungeonsAndDragons.MVC.Controllers
     [Authorize]
     public class CharacterController : Controller
     {
-        private readonly ApplicationDbContext _ctx;
+        private readonly ICharacterService _character;
+
+        public CharacterController(ICharacterService character)
+        {
+            _character = character;
+        }
+
+
 
         //Dependency Injection
-        public CharacterController(ApplicationDbContext ctx)
-        {
-            _ctx = ctx;
-        }
+        //public CharacterController(ApplicationDbContext ctx)
+        //{
+        //    _ctx = ctx;
+        //}
 
         //Index GET
         [ActionName("Index")]
         public IActionResult Index()
         {
-            ClaimsPrincipal currentUser = this.User;
-
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new CharacterService(currentUserId, _ctx);
-            var model = service.GetCharacters();
+            _character.SetUserId(GetUserId());
+            var model = _character.GetCharacters();
 
             return View(model);
         }
@@ -38,10 +41,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Create")]
         public IActionResult Create()
         {
-            var service = CreateCharacterService();
-
-            ViewData["RaceId"] = new SelectList(service.RacesList(), "Id", "Name");
-            ViewData["ClassId"] = new SelectList(service.ClassesList(), "Id", "Name");
+            _character.SetUserId(GetUserId());
+            ViewData["RaceId"] = new SelectList(_character.RacesList(), "Id", "Name");
+            ViewData["ClassId"] = new SelectList(_character.ClassesList(), "Id", "Name");
             //ViewData["RaceId"] = service.RacesList();
             //ViewData["ClassId"] = service.ClassesList();
 
@@ -56,11 +58,11 @@ namespace DungeonsAndDragons.MVC.Controllers
             //Error Handling
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateCharacterService();
+
 
             //If bool comes back as true then block executes
-
-            if(service.CreateCharacter(model))
+            _character.SetUserId(GetUserId());
+            if (_character.CreateCharacter(model))
             {
                 TempData["SaveResult"] = "Your character was created.";
                 return RedirectToAction("Index");
@@ -81,9 +83,8 @@ namespace DungeonsAndDragons.MVC.Controllers
                 return NotFound();
             }
 
-            var service = CreateCharacterService();
-
-            var model = service.FindCharacterById(id);
+            _character.SetUserId(GetUserId());
+            var model = _character.FindCharacterById(id);
 
             return View(model);
         }
@@ -92,8 +93,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Edit")]
         public ActionResult Edit (int id)
         {
-            var service = CreateCharacterService();
-            var model = service.CharacterEditGenerator(id);
+            _character.SetUserId(GetUserId());
+
+            var model = _character.CharacterEditGenerator(id);
             
             return View(model); 
         }
@@ -105,12 +107,13 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model); //returns model if it's not valid
 
-            var service = CreateCharacterService();
 
             model.CharacterId = id;
 
+            _character.SetUserId(GetUserId());
+
             //checks to see if models changes can be saved
-            if(service.UpdateCharacter(model))
+            if (_character.UpdateCharacter(model))
             {
                 TempData["SaveResult"] = "Your character was updated."; //Message that will be sent to user
                 return RedirectToAction("Index"); //returns to Index page
@@ -124,8 +127,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Delete")]
         public ActionResult Delete(int id)
         {
-            var service = CreateCharacterService();
-            var model = service.FindCharacterById(id);
+            _character.SetUserId(GetUserId());
+            var model = _character.FindCharacterById(id);
 
             return View(model);
         }
@@ -135,8 +138,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, CharacterDetailView model)
         {
-            var service = CreateCharacterService();
-            if(service.DeleteCharacter(id))
+            _character.SetUserId(GetUserId());
+            if(_character.DeleteCharacter(id))
             {
                 TempData["SaveResult"] = "Your character was deleted";
                 return RedirectToAction("Index");
@@ -145,13 +148,12 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
-        private CharacterService CreateCharacterService()
+        private Guid GetUserId()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new CharacterService(currentUserId, _ctx);
-            return service;
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
         }
+
     }
 }

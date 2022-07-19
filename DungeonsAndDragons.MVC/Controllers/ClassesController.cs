@@ -11,20 +11,19 @@ namespace DungeonsAndDragons.MVC.Controllers
     public class ClassesController : Controller
     {
 
-        private readonly ApplicationDbContext _ctx;
+        private readonly IClassesService _classes;
 
-        public ClassesController(ApplicationDbContext ctx)
+        public ClassesController(IClassesService classes)
         {
-            _ctx = ctx;
+            _classes = classes;
         }
-
 
         // GET: ClassesController
         [ActionName("Index")]
         public IActionResult Index()
         {
-            var service = CreateClassesService();
-            var models = service.GetClasses();
+            _classes.SetUserId(GetUserId());
+            var models = _classes.GetClasses();
 
             return View(models);
         }
@@ -33,8 +32,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Details")]
         public IActionResult Details(int id)
         {
-            var service = CreateClassesService();
-            var model = service.ViewClass(id);
+            _classes.SetUserId(GetUserId());
+            var model = _classes.ViewClass(id);
 
             return View(model);
         }
@@ -54,9 +53,9 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateClassesService();
+            _classes.SetUserId(GetUserId());
 
-            if(service.CreateClasses(model))
+            if (_classes.CreateClasses(model))
             {
                 TempData["SaveResult"] = "Your Class was created.";
                 return RedirectToAction("Index");
@@ -71,8 +70,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Edit")]
         public IActionResult Edit(int id)
         {
-            var service = CreateClassesService();
-            var model = service.GenerateClassUpdate(id);
+            _classes.SetUserId(GetUserId());
+            var model = _classes.GenerateClassUpdate(id);
 
             return View(model);
         }
@@ -85,10 +84,10 @@ namespace DungeonsAndDragons.MVC.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateClassesService();
+            _classes.SetUserId(GetUserId());
             model.ClassId = id;
 
-            if(service.UpdateClass(id, model))
+            if(_classes.UpdateClass(id, model))
             {
                 TempData["SaveResult"] = "Your class was updated";
                 return RedirectToAction("Index");
@@ -102,8 +101,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ActionName("Delete")]
         public IActionResult Delete(int id)
         {
-            var service = CreateClassesService();
-            var model = service.ViewClass(id);
+            _classes.SetUserId(GetUserId());
+            var model = _classes.ViewClass(id);
 
             return View(model);
         }
@@ -113,8 +112,8 @@ namespace DungeonsAndDragons.MVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id, ClassDetails model)
         {
-            var service = CreateClassesService();
-            if(service.DeleteClass(id))
+            _classes.SetUserId(GetUserId());
+            if (_classes.DeleteClass(id))
             {
                 TempData["SaveResult"] = "Your class was deleted";
                 return RedirectToAction("Index");
@@ -123,13 +122,11 @@ namespace DungeonsAndDragons.MVC.Controllers
             return View(model);
         }
 
-        private ClassesService CreateClassesService()
+        private Guid GetUserId()
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new ClassesService(currentUserId, _ctx);
-            return service;
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
         }
     }
 }

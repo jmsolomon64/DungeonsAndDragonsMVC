@@ -10,16 +10,15 @@ using DungeonsAndDragons.Model.Character;
 
 namespace DungeonsAndDragons.Service
 {
-    public class CharacterService
+    public class CharacterService : ICharacterService
     {
         //dependencies
         private Guid _userId;
         private readonly ApplicationDbContext _ctx;
 
-        public CharacterService(Guid userId, ApplicationDbContext context)
+        public CharacterService(ApplicationDbContext context)
         {
             _ctx = context;
-            _userId = userId;
         }
 
         public bool SetUserId(Guid userId)
