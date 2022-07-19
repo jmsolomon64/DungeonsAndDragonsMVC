@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonsAndDragons.MVC", "DungeonsAndDragons.MVC\DungeonsAndDragons.MVC.csproj", "{5D9B86C0-26B7-47B3-BF6F-97B780DF23A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.MVC", "DungeonsAndDragons.MVC\DungeonsAndDragons.MVC.csproj", "{5D9B86C0-26B7-47B3-BF6F-97B780DF23A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonsAndDragons.Data", "DungeonsAndDragons.Data\DungeonsAndDragons.Data.csproj", "{FD75D0AF-C7F4-4A7D-B951-E6CA07F09171}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Data", "DungeonsAndDragons.Data\DungeonsAndDragons.Data.csproj", "{FD75D0AF-C7F4-4A7D-B951-E6CA07F09171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonsAndDragons.Model", "DungeonsAndDragons.Model\DungeonsAndDragons.Model.csproj", "{49184A3F-E843-4138-AB95-59CCC8815422}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Model", "DungeonsAndDragons.Model\DungeonsAndDragons.Model.csproj", "{49184A3F-E843-4138-AB95-59CCC8815422}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonsAndDragons.Service", "DungeonsAndDragons.Service\DungeonsAndDragons.Service.csproj", "{C9E5D350-BCCB-4C1D-8615-E556636D0F70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Service", "DungeonsAndDragons.Service\DungeonsAndDragons.Service.csproj", "{C9E5D350-BCCB-4C1D-8615-E556636D0F70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
