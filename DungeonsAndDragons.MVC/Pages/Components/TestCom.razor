@@ -1,34 +1,47 @@
 ﻿@using DungeonsAndDragons.Model.Equipment
 @using Newtonsoft.Json
 @inject HttpClient _client;
-@_client.BaseAddress = $"http://localhost:5091/api/Equipment"
 
 
-
+<h3>Inventory</h3>
+@foreach(EquipmentDetail item in Items)
+{
+    <h2>@item.Name</h2>
+    <h2>@item.Weight</h2>
+    <h2>@item.Cost</h2>
+    <h2>@item.Description</h2>
+}
 
 
 
 
 
 @code {
-    public IEnumerable<EquipmentDetail> Items { get; set; }
+    public List<EquipmentDetail> Items { get; set; } = new List<EquipmentDetail>();
     public bool IsLoading { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _client.BaseAddress = new Uri("http://localhost:5091/api/Equipment");
+        GetAllItemsAsync();
+    }
 
 
     //I want to use client to call out to API in project to pull all Items and display their information.
     protected async Task GetAllItemsAsync()
     {
         IsLoading = true;
-        Items = GetAllItems();
+        Items = await GetAllItems();
+        IsLoading = false;
     }
 
-    public async IAsyncEnumerable<EquipmentDetail> GetAllItems()
+    public async Task<List<EquipmentDetail>> GetAllItems()
     {
-        var response = await _client.GetAsync(_client.BaseAddress + "/ViewAllItems");
+        var response = await _client.GetAsync("/ViewAllItems");
         var result = await response.Content.ReadAsStringAsync();
 
-        var items = JsonConvert.DeserializeObject<IAsyncEnumerable<EquipmentDetail>>(result);
+        var items = JsonConvert.DeserializeObject<List<EquipmentDetail>>(result);
 
-        yield return items;
+        return items;
     }
 }

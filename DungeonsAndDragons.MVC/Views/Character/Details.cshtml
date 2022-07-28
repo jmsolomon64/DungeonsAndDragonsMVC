@@ -1,4 +1,5 @@
-﻿@model DungeonsAndDragons.Model.Character.CharacterDetailView
+﻿@using DungeonsAndDragons.MVC.Pages.Components
+@model DungeonsAndDragons.Model.Character.CharacterDetailView
 
 @{
     ViewData["Title"] = "Details";
@@ -82,4 +83,6 @@
     <a asp-action="Edit" asp-route-id="@Model.CharacterId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<component type="typeof(TestCom)" render-mode="ServerPrerendered" />
 

@@ -36,7 +36,7 @@ namespace DungeonsAndDragons.API.Controllers
         {
             IEnumerable<EquipmentDetail> equipment = _service.GetAllItems();
 
-            if (equipment.Count() > 0 ) return Ok(equipment);
+            if (equipment.Count() > 0 ) return Ok(equipment.ToList());
 
             return BadRequest("Invalid request.");
         }
