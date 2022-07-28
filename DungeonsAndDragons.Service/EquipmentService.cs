@@ -40,6 +40,21 @@ namespace DungeonsAndDragons.Service
 
             return query.ToArray();
         }
+
+        public List<EquipmentDetail> GetAllItems()
+        {
+            var query = _ctx.Items.Select(x => new EquipmentDetail
+            {
+                EquipmentId = x.Id,
+                Name = x.Name,
+                Weight = x.Weight,
+                Cost = x.Cost,
+                Description = x.Description
+            });
+
+            return query.ToList();
+        }
+
         public EquipmentDetail ViewItem(int? id)
         {
             var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);
@@ -57,6 +72,22 @@ namespace DungeonsAndDragons.Service
         }
 
         //I want to add a method that pulls all weapons in a  players inventory
+        //public IEnumerable<EquipmentDetail> ViewCharactersItems(int id)
+        //{
+        //    var query = _ctx.Items
+        //        .Where(x => x.) //I need to ask how to pull all equipment from 1 character with many to many relationships
+        //        //If not I need to add foreign key and pull by that 
+        //        .Select(x => new EquipmentDetail
+        //    {
+        //        EquipmentId = x.Id,
+        //        Name = x.Name,
+        //        Weight = x.Weight,
+        //        Cost = x.Cost,
+        //        Description = x.Description
+        //    });
+
+        //    var result = query.ToArray();
+        //}
 
         public bool CreateEquipment(EquipmentCreate model)
         {

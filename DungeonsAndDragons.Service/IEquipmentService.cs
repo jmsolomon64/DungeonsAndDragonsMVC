@@ -9,7 +9,9 @@ namespace DungeonsAndDragons.Service
         bool DeleteEquipment(int id);
         EquipmentUpdate GenerateUpdateEquipment(int id);
         IEnumerable<EquipmentDetail> GetAllEquipment();
+        List<EquipmentDetail> GetAllItems();
         bool UpdateEquipment(EquipmentUpdate model);
         EquipmentDetail ViewItem(int? id);
+        //IEnumerable<EquipmentDetail> ViewCharactersItems(int id);
     }
 }

@@ -1,13 +1,34 @@
-﻿
+﻿@using DungeonsAndDragons.Model.Equipment
+@using Newtonsoft.Json
+@inject HttpClient _client;
+@_client.BaseAddress = $"http://localhost:5091/api/Equipment"
 
-<p>
-    The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues.
-The 20-meter pacer test will begin in 30 seconds. Line up at the start.
-The running speed starts slowly but gets faster each minute after you hear this signal.
-A single lap should be completed each time you hear this sound.
-Remember to run in a straight line, and run as long as possible.
-The second time you fail to complete a lap before the sound, your test is over.
-The test will begin on the word start.
-On your mark, get ready, start.
-</p>
 
+
+
+
+
+
+
+@code {
+    public IEnumerable<EquipmentDetail> Items { get; set; }
+    public bool IsLoading { get; set; }
+
+
+    //I want to use client to call out to API in project to pull all Items and display their information.
+    protected async Task GetAllItemsAsync()
+    {
+        IsLoading = true;
+        Items = GetAllItems();
+    }
+
+    public async IAsyncEnumerable<EquipmentDetail> GetAllItems()
+    {
+        var response = await _client.GetAsync(_client.BaseAddress + "/ViewAllItems");
+        var result = await response.Content.ReadAsStringAsync();
+
+        var items = JsonConvert.DeserializeObject<IAsyncEnumerable<EquipmentDetail>>(result);
+
+        yield return items;
+    }
+}
