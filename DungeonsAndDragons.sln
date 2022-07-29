@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Model", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Service", "DungeonsAndDragons.Service\DungeonsAndDragons.Service.csproj", "{C9E5D350-BCCB-4C1D-8615-E556636D0F70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DungeonsAndDragons.API", "DungeonsAndDragons.API\DungeonsAndDragons.API.csproj", "{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.API", "DungeonsAndDragons.API\DungeonsAndDragons.API.csproj", "{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

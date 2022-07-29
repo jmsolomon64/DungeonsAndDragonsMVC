@@ -1,0 +1,21 @@
+﻿@using DungeonsAndDragons.Model.Equipment
+@using Newtonsoft.Json
+@inject HttpClient _client
+
+
+<h3>Catalogue</h3>
+@*Need a search bar*@
+<h1>@CharacterId</h1>
+@*Need a form that doubles as display*@
+
+
+@code {
+    //Pull all of the items in db set
+    //logic that pulls from the form to add items to characters Icollection
+    //Search bar logic that checks db for items that contain the string typed in 
+    public List<EquipmentDetail> items { get; set; }
+    public List<EquipmentDetail> selectedItems { get; set; }
+
+    [Parameter]
+    public int CharacterId { get; set; }
+}

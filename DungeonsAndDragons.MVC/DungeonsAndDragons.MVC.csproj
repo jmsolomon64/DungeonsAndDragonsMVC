@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Components\Catalogue.razor" />
     <Content Remove="_Imports.razor" />
   </ItemGroup>
 
@@ -35,11 +36,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Components\Catalogue.razor" />
     <_ContentIncludedByDefault Remove="_Imports.razor" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\Catalogue.razor" />
     <None Include="_Imports.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Components\Catalogue.razor" />
   </ItemGroup>
 
 </Project>

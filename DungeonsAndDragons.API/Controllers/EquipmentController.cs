@@ -41,5 +41,14 @@ namespace DungeonsAndDragons.API.Controllers
             return BadRequest("Invalid request.");
         }
 
+        [HttpGet("ViewCharacterItems/{id}")]
+        public async Task<IActionResult> GetCharactersItems(int id)
+        {
+            List<EquipmentDetail> equipment = _service.GetEquipmentByCharacter(id);
+
+            if (equipment.Count() > 0) return Ok(equipment);
+
+            return BadRequest("Invalid request.");
+        }
     }
 }

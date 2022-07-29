@@ -12,6 +12,6 @@ namespace DungeonsAndDragons.Service
         List<EquipmentDetail> GetAllItems();
         bool UpdateEquipment(EquipmentUpdate model);
         EquipmentDetail ViewItem(int? id);
-        //IEnumerable<EquipmentDetail> ViewCharactersItems(int id);
+        List<EquipmentDetail> GetEquipmentByCharacter(int id);
     }
 }
