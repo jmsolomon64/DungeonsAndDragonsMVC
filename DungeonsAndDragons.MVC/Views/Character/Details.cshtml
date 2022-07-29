@@ -4,7 +4,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    int id = @Model.CharacterId;
 }
 
 <h1>Details</h1>
@@ -86,5 +85,6 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-<component type="typeof(Catalogue)" render-mode="ServerPrerendered" CharacterId="@id" />
+@*Param-VariableName will bind data into component*@
+<component type="typeof(TestCom)" render-mode="ServerPrerendered" param-CharacterId=@Model.CharacterId/>
 
