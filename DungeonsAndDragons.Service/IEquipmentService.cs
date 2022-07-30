@@ -13,5 +13,6 @@ namespace DungeonsAndDragons.Service
         bool UpdateEquipment(EquipmentUpdate model);
         EquipmentDetail ViewItem(int? id);
         List<EquipmentDetail> GetEquipmentByCharacter(int id);
+        bool AddItemToCharacter(int characterId, int itemId);
     }
 }

@@ -19,6 +19,7 @@ namespace DungeonsAndDragons.API.Controllers
             _service = service;
         }
 
+        //View Specific Item
         [HttpGet("ViewItem/{id}")]
         public async Task<IActionResult> ViewById(int id)
         {
@@ -29,8 +30,7 @@ namespace DungeonsAndDragons.API.Controllers
             return Ok(item);
         }
 
-        
-
+        //View All Items
         [HttpGet("ViewAllItems")]
         public async Task<IActionResult> GetAllItems()
         {
@@ -41,6 +41,7 @@ namespace DungeonsAndDragons.API.Controllers
             return BadRequest("Invalid request.");
         }
 
+        //View Items In characters inventory
         [HttpGet("ViewCharacterItems/{id}")]
         public async Task<IActionResult> GetCharactersItems(int id)
         {
@@ -49,6 +50,17 @@ namespace DungeonsAndDragons.API.Controllers
             if (equipment.Count() > 0) return Ok(equipment);
 
             return BadRequest("Invalid request.");
+        }
+
+        //Add Items to Character
+        [HttpPut("AddItemToCharacter/{characterId}/{itemId}")]
+        public async Task<IActionResult> AddItemToCharacter(int characterId, int itemId)
+        {
+            bool success = _service.AddItemToCharacter(characterId, itemId);
+
+            if (success) return Ok("Item was added to inventory.");
+
+            return BadRequest();
         }
     }
 }
