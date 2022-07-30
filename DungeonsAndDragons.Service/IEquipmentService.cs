@@ -14,5 +14,6 @@ namespace DungeonsAndDragons.Service
         EquipmentDetail ViewItem(int? id);
         List<EquipmentDetail> GetEquipmentByCharacter(int id);
         bool AddItemToCharacter(int characterId, int itemId);
+        bool DeleteItemFromCharacter(int characterId, int itemId);
     }
 }

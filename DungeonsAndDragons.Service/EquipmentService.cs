@@ -1,6 +1,7 @@
 ﻿using DungeonsAndDragons.Data;
 using DungeonsAndDragons.Data.Entity;
 using DungeonsAndDragons.Model.Equipment;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -116,7 +117,9 @@ namespace DungeonsAndDragons.Service
         public List<EquipmentDetail> GetEquipmentByCharacter(int id)
         {
             //Finds character by id, and creats a list of items from Icollection 
-            var character = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+            var character = _ctx.Characters
+                .Include(x => x.Inventory) //will populate virtual list
+                .FirstOrDefault(x => x.Id == id);
             var items = character.Inventory.ToList();
 
             //Formats items from list of equipment into a list of Equipment details
@@ -140,6 +143,23 @@ namespace DungeonsAndDragons.Service
             if (item == null) return false;
 
             character.Inventory.Add(item);
+            return _ctx.SaveChanges() == 1;
+
+            return false;
+        }
+
+        //Delete Item from inventory
+        public bool DeleteItemFromCharacter(int characterId, int itemId)
+        {
+            var character = _ctx.Characters
+                .Include(_x => _x.Inventory)
+                .FirstOrDefault(x => x.Id == characterId);
+            if (character == null) return false;
+
+            var item = _ctx.Items.FirstOrDefault(x => x.Id == itemId);
+            if (item == null) return false;
+
+            character.Inventory.Remove(item);
             return _ctx.SaveChanges() == 1;
 
             return false;

@@ -62,5 +62,16 @@ namespace DungeonsAndDragons.API.Controllers
 
             return BadRequest();
         }
+
+        //Delete Items from inventory
+        [HttpDelete("RemoveItemFromCharacter/{characterId}/{itemId}")]
+        public async Task<IActionResult> DeleteItemFromCharacter(int characterId, int itemId)
+        {
+            bool success = _service.DeleteItemFromCharacter(characterId, itemId);
+
+            if (success) return Ok("Item was removed from inventory.");
+
+            return BadRequest();
+        }
     }
 }
