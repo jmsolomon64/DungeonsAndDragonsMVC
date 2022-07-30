@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DungeonsAndDragons.Data.Entity
@@ -25,6 +26,7 @@ namespace DungeonsAndDragons.Data.Entity
         [MaxLength(10000)]
         public string Description { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Character> Characters { get; set; }
 
         public Equipment()

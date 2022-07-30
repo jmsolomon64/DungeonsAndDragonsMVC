@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Model", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.Service", "DungeonsAndDragons.Service\DungeonsAndDragons.Service.csproj", "{C9E5D350-BCCB-4C1D-8615-E556636D0F70}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DungeonsAndDragons.API", "DungeonsAndDragons.API\DungeonsAndDragons.API.csproj", "{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C9E5D350-BCCB-4C1D-8615-E556636D0F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9E5D350-BCCB-4C1D-8615-E556636D0F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9E5D350-BCCB-4C1D-8615-E556636D0F70}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C36C17-4C04-4BB6-8A1E-40781C2ED2B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

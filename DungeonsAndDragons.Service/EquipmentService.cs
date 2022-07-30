@@ -18,6 +18,7 @@ namespace DungeonsAndDragons.Service
             _ctx = ctx;
         }
 
+        
         public bool SetUserId(Guid userId)
         {
             if (userId == null) return false;
@@ -40,6 +41,23 @@ namespace DungeonsAndDragons.Service
 
             return query.ToArray();
         }
+
+        //VIew all
+        public List<EquipmentDetail> GetAllItems()
+        {
+            var query = _ctx.Items.Select(x => new EquipmentDetail
+            {
+                EquipmentId = x.Id,
+                Name = x.Name,
+                Weight = x.Weight,
+                Cost = x.Cost,
+                Description = x.Description
+            });
+
+            return query.ToList();
+        }
+
+        //View specific
         public EquipmentDetail ViewItem(int? id)
         {
             var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);
@@ -56,8 +74,7 @@ namespace DungeonsAndDragons.Service
             return model;
         }
 
-        //I want to add a method that pulls all weapons in a  players inventory
-
+        //POST
         public bool CreateEquipment(EquipmentCreate model)
         {
             var entity = new Equipment()
@@ -72,6 +89,7 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        //PUT
         public bool UpdateEquipment(EquipmentUpdate model)
         {
             var entity = _ctx.Items.FirstOrDefault(x => x.Id == model.EquipmentId);
@@ -84,6 +102,7 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        //DELETE
         public bool DeleteEquipment(int id)
         {
             var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);
@@ -92,7 +111,43 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        //Inventory Management Methods
+        //GET all by character
+        public List<EquipmentDetail> GetEquipmentByCharacter(int id)
+        {
+            //Finds character by id, and creats a list of items from Icollection 
+            var character = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+            var items = character.Inventory.ToList();
+
+            //Formats items from list of equipment into a list of Equipment details
+            var formatItems = new List<EquipmentDetail>();
+            foreach (Equipment item in items)
+            {
+                var formatItem = ViewItem(item.Id);
+                formatItems.Add(formatItem);
+            }
+
+            return formatItems;
+        }
+
+        //PUT Item to character
+        public bool AddItemToCharacter(int characterId, int itemId)
+        {
+            var character = _ctx.Characters.FirstOrDefault(x => x.Id == characterId);
+            if (character == null) return false;
+
+            var item = _ctx.Items.FirstOrDefault(x => x.Id == itemId);
+            if (item == null) return false;
+
+            character.Inventory.Add(item);
+            return _ctx.SaveChanges() == 1;
+
+            return false;
+        }
+
+
         //Extra methods
+        //Generate update equipment model
         public EquipmentUpdate GenerateUpdateEquipment(int id)
         {
             var entity = _ctx.Items.FirstOrDefault(x => x.Id == id);

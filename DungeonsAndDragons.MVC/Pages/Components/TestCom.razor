@@ -1,13 +1,63 @@
-﻿
+﻿@using DungeonsAndDragons.Model.Equipment
+@using Newtonsoft.Json
+@inject HttpClient _client;
 
-<p>
-    The FitnessGram™ Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues.
-The 20-meter pacer test will begin in 30 seconds. Line up at the start.
-The running speed starts slowly but gets faster each minute after you hear this signal.
-A single lap should be completed each time you hear this sound.
-Remember to run in a straight line, and run as long as possible.
-The second time you fail to complete a lap before the sound, your test is over.
-The test will begin on the word start.
-On your mark, get ready, start.
-</p>
 
+<h3>Inventory</h3>
+<h4>@CharacterId</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Equipment Id</th>
+            <th>Name</th>
+            <th>Weight</th>
+            <th>Cost</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Items) {
+        <tr>
+            <td>@item.EquipmentId</td>
+            <td>@item.Name</td>
+            <td>@item.Weight</td>
+            <td>@item.Cost</td>
+            <td>@item.Description</td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+@code {
+    public List<EquipmentDetail> Items { get; set; } = new List<EquipmentDetail>();
+    public bool isRunning = false;
+
+    [Parameter]
+    public int CharacterId { get; set; }
+
+    //Method called on initial render
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllItemsAsync();
+    }
+
+    //I want to use client to call out to API in project to pull all Items and display their information.
+    private async Task GetAllItemsAsync()
+    {
+        Items = await GetAllItems();
+    }
+
+    public async Task<List<EquipmentDetail>> GetAllItems()
+    {
+        var results = JsonConvert.DeserializeObject<List<EquipmentDetail>>(await _client.GetStringAsync("http://localhost:5091/api/Equipment/ViewAllItems"));
+
+        return results;
+    }
+
+    private void StartRun()
+    {
+        isRunning = true;
+    }
+}

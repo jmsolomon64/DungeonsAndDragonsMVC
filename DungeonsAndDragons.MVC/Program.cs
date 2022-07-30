@@ -21,6 +21,9 @@ builder.Services.AddScoped<IClassesService, ClassesService>();
 builder.Services.AddScoped<IRaceService, RaceService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 
+//Adds http client for Blazor server api calls
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
