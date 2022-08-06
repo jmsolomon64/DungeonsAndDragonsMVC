@@ -182,5 +182,36 @@ namespace DungeonsAndDragons.Service
 
             return model;
         }
+
+        public bool SeedEquipment()
+        {
+            if(_ctx.Items.Count() == 0)
+            {
+                List<Equipment> equipment = new List<Equipment>();
+                equipment.Add(new Equipment() { Name = "Padded Armor", Cost = 5, Weight = 8, Description = "Light Armor" });
+                equipment.Add(new Equipment() { Name = "Leather Armor", Cost = 10, Weight = 10, Description = "Light Armor" });
+                equipment.Add(new Equipment() { Name = "Chain Shirt", Cost = 50, Weight = 20, Description = "Medium Armor" });
+                equipment.Add(new Equipment() { Name = "Scale Mail", Cost = 50, Weight = 45, Description = "Medium Armor" });
+                equipment.Add(new Equipment() { Name = "Splint", Cost = 200, Weight = 60, Description = "Heavy Armor" });
+                equipment.Add(new Equipment() { Name = "Plate", Cost = 1500, Weight = 65, Description = "Heavy Armor" });
+                equipment.Add(new Equipment() { Name = "Shield", Cost = 10, Weight = 6, Description = "Standard Shield" });
+                equipment.Add(new Equipment() { Name = "Club", Cost = 1, Weight = 2, Description = "Simple Bludgeoning Weapon" });
+                equipment.Add(new Equipment() { Name = "Dagger", Cost = 2, Weight = 1, Description = "Simple Piercing Weapon" });
+                equipment.Add(new Equipment() { Name = "Handaxe", Cost = 5, Weight = 2, Description = "Simple Slashing Weapon" });
+                equipment.Add(new Equipment() { Name = "Javeline", Cost = 5, Weight = 2, Description = "Simple Piercing Weapon" });
+                equipment.Add(new Equipment() { Name = "Quarter Staff", Cost = 2, Weight = 4, Description = "Simple Bludgeoning Weapon" });
+                equipment.Add(new Equipment() { Name = "Light Crossbow", Cost = 25, Weight = 5, Description = "Simple Ranged, Piercing Weapon" });
+                equipment.Add(new Equipment() { Name = "Dart", Cost = 5, Weight = .25, Description = "Simple Ranged, Piercing Weapon" });
+                equipment.Add(new Equipment() { Name = "Shortbow", Cost = 25, Weight = 2, Description = "Simple Ranged, Piercing Weapon" });
+                equipment.Add(new Equipment() { Name = "Sling", Cost = 1, Weight = 0, Description = "Simple Ranged, Bludgeoning Weapon" });
+
+                foreach (var item in equipment) _ctx.Items.Add(item);
+                _ctx.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace DungeonsAndDragons.Service
         IEnumerable<ClassDetails> GetClasses();
         bool UpdateClass(int id, ClassUpdate model);
         ClassDetails ViewClass(int id);
+        bool SeedClasses();
     }
 }

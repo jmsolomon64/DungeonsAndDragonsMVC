@@ -23,6 +23,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         public IActionResult Index()
         {
             _classes.SetUserId(GetUserId());
+            bool isSeeded = _classes.SeedClasses();
             var models = _classes.GetClasses();
 
             return View(models);

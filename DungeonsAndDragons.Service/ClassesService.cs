@@ -130,5 +130,30 @@ namespace DungeonsAndDragons.Service
 
             return entity;
         }
+
+        public bool SeedClasses()
+        {
+            if (_ctx.Classes.Count() == 0)
+            {
+                List<Classes> classes = new List<Classes>();
+                classes.Add(new Classes() { Name = "Barbarian", Description = "Fierce primitive warrior", IsActive = true });
+                classes.Add(new Classes() { Name = "Bard", Description = "Musical Magician", IsActive = true });
+                classes.Add(new Classes() { Name = "Cleric", Description = "Priestly warrior with divine magic", IsActive = true });
+                classes.Add(new Classes() { Name = "Druid", Description = "Priests of the old faith, in tune with nature", IsActive = true });
+                classes.Add(new Classes() { Name = "Fighter", Description = "Master of martial combat", IsActive = true });
+                classes.Add(new Classes() { Name = "Monk", Description = "Master of martial arts", IsActive = true });
+                classes.Add(new Classes() { Name = "Paladin", Description = "Holy warrior bound by an oath", IsActive = true });
+                classes.Add(new Classes() { Name = "Ranger", Description = "Warrior who combats threats on edge of civilization", IsActive = true });
+                classes.Add(new Classes() { Name = "Sorcerer", Description = "Naturally powerful spellcaster", IsActive = true });
+                classes.Add(new Classes() { Name = "Warlock", Description = "Magic user who's power derives from an extraplanar entity", IsActive = true });
+                classes.Add(new Classes() { Name = "Wizard", Description = "Scholarly magic user", IsActive = true });
+
+                foreach (var item in classes) _ctx.Classes.Add(item);
+
+                _ctx.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }

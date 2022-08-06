@@ -107,5 +107,28 @@ namespace DungeonsAndDragons.Service
             var entity = _ctx.Races.FirstOrDefault(x => x.Id == id);
             return entity;
         }
+
+        public bool SeedRaces()
+        {
+            if (_ctx.Races.Count() == 0)
+            {
+                List<Race> races = new List<Race>();
+                races.Add(new Race() { Name = "Draganborn", Description = "Humanoid Dragons", IsActive = true });
+                races.Add(new Race() { Name = "Dwarf", Description = "Short Humans", IsActive = true });
+                races.Add(new Race() { Name = "Elf", Description = "Stuck up, pointy eared humans", IsActive = true });
+                races.Add(new Race() { Name = "Gnome", Description = "Dwarfs with spice", IsActive = true });
+                races.Add(new Race() { Name = "Half-Elf", Description = "Slightly less stuck up humans", IsActive = true });
+                races.Add(new Race() { Name = "Halfling", Description = "I have no idea what this is", IsActive = true });
+                races.Add(new Race() { Name = "Half-Orc", Description = "Strong Humans", IsActive = true });
+                races.Add(new Race() { Name = "Human", Description = "Literally a human", IsActive = true });
+                races.Add(new Race() { Name = "Tiefling", Description = "Demonic Human?", IsActive = true });
+
+                foreach (var item in races) _ctx.Races.Add(item);
+
+                _ctx.SaveChanges();
+                return true;
+            }
+            return false;
+        }
     }
 }

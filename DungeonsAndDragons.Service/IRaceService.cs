@@ -13,5 +13,6 @@ namespace DungeonsAndDragons.Service
         IEnumerable<RaceDetails> GetRaces();
         bool SetUserId(Guid userId);
         RaceDetails ViewRace(int id);
+        bool SeedRaces();
     }
 }

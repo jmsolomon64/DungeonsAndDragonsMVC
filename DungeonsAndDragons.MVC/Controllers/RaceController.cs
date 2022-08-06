@@ -20,6 +20,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         public ActionResult Index()
         {
             _race.SetUserId(GetUserId());
+            var seeded = _race.SeedRaces();
             var models = _race.GetRaces();
             
             return View(models);

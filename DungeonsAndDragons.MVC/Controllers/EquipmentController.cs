@@ -21,6 +21,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         public ActionResult Index()
         {
             _equipment.SetUserId(GetUserId());
+            var seed = _equipment.SeedEquipment();
             var model = _equipment.GetAllEquipment();
 
             return View(model);

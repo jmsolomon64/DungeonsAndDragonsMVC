@@ -48,6 +48,19 @@ namespace DungeonsAndDragons.API.Controllers
             List<EquipmentDetail> equipment = _service.GetEquipmentByCharacter(id);
 
             if (equipment.Count() > 0) return Ok(equipment);
+            else
+            {
+                EquipmentDetail item = new EquipmentDetail()
+                {
+                    EquipmentId = 0,
+                    Name = "Nothing",
+                    Weight = 0,
+                    Cost = 0,
+                    Description = ""
+                };
+                equipment.Add(item);
+                return Ok(equipment);
+            }
 
             return BadRequest("Invalid request.");
         }
