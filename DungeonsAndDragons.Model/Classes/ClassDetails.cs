@@ -8,6 +8,7 @@ namespace DungeonsAndDragons.Model.Class
 {
     public class ClassDetails
     {
+        public int ClassId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

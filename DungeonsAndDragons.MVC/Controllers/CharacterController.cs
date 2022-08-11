@@ -11,46 +11,58 @@ namespace DungeonsAndDragons.MVC.Controllers
     [Authorize]
     public class CharacterController : Controller
     {
-        private readonly ApplicationDbContext _ctx;
+        private readonly ICharacterService _character;
 
-        //Dependency Injection
-        public CharacterController(ApplicationDbContext ctx)
+        public CharacterController(ICharacterService character)
         {
-            _ctx = ctx;
+            _character = character;
         }
 
+
+
+        //Dependency Injection
+        //public CharacterController(ApplicationDbContext ctx)
+        //{
+        //    _ctx = ctx;
+        //}
+
         //Index GET
+        [ActionName("Index")]
         public IActionResult Index()
         {
-            ClaimsPrincipal currentUser = this.User;
-
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var service = new CharacterService(currentUserId, _ctx);
-            var model = service.GetCharacters();
+            _character.SetUserId(GetUserId());
+            var model = _character.GetCharacters();
 
             return View(model);
         }
 
+
+        //NEED TO ADDRESS THIS
+        [ActionName("Create")]
         public IActionResult Create()
         {
-            ViewData["RaceId"] = new SelectList(_ctx.Races, "Id", "Name");
-            ViewData["ClassId"] = new SelectList(_ctx.Classes, "Id", "Name");
+            _character.SetUserId(GetUserId());
+            ViewData["RaceId"] = new SelectList(_character.RacesList(), "Id", "Name");
+            ViewData["ClassId"] = new SelectList(_character.ClassesList(), "Id", "Name");
+            //ViewData["RaceId"] = service.RacesList();
+            //ViewData["ClassId"] = service.ClassesList();
+
             return View();
         }
 
         [HttpPost]
+        [ActionName("Create")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CharacterCreate model)
         {
             //Error Handling
             if (!ModelState.IsValid) return View(model);
 
-            var service = CreateCharacterService();
+
 
             //If bool comes back as true then block executes
-
-            if(service.CreateCharacter(model))
+            _character.SetUserId(GetUserId());
+            if (_character.CreateCharacter(model))
             {
                 TempData["SaveResult"] = "Your character was created.";
                 return RedirectToAction("Index");
@@ -63,6 +75,7 @@ namespace DungeonsAndDragons.MVC.Controllers
         }
 
         //GET
+        [ActionName("Details")]
         public IActionResult Details(int? id)
         {
             if(id == null)
@@ -70,40 +83,77 @@ namespace DungeonsAndDragons.MVC.Controllers
                 return NotFound();
             }
 
-            var character = _ctx.Characters.FirstOrDefault(x => id == x.Id);
-
-            if(character == null)
-            {
-                return NotFound();
-            }
-
-            var service = CreateCharacterService();
-
-            var model = new CharacterDetailView
-            {
-                Name = character.Name,
-                Race = service.FindRaceById(character.RaceId).Name,
-                Class = service.FindClassById(character.ClassId).Name,
-                Level = character.Level,
-                Strength = character.Strength,
-                Dexterity = character.Dexterity,
-                Consitution = character.Consitution,
-                Inteligence = character.Inteligence,
-                Wisdom = character.Wisdom,
-                Charisma = character.Charisma,
-                Description = character.Description,
-            };
+            _character.SetUserId(GetUserId());
+            var model = _character.FindCharacterById(id);
 
             return View(model);
         }
 
-        private CharacterService CreateCharacterService()
+        //GET
+        [ActionName("Edit")]
+        public ActionResult Edit (int id)
         {
-            ClaimsPrincipal currentUser = this.User;
-            var currentUserId = Guid.Parse(currentUser.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _character.SetUserId(GetUserId());
 
-            var service = new CharacterService(currentUserId, _ctx);
-            return service;
+            var model = _character.CharacterEditGenerator(id);
+            
+            return View(model); 
         }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit (int id, CharacterEdit model)
+        {
+            if (!ModelState.IsValid) return View(model); //returns model if it's not valid
+
+
+            model.CharacterId = id;
+
+            _character.SetUserId(GetUserId());
+
+            //checks to see if models changes can be saved
+            if (_character.UpdateCharacter(model))
+            {
+                TempData["SaveResult"] = "Your character was updated."; //Message that will be sent to user
+                return RedirectToAction("Index"); //returns to Index page
+            }
+
+            ModelState.AddModelError("", "Your character could not be updated.");
+            return View(model);
+        }
+
+        //GET
+        [ActionName("Delete")]
+        public ActionResult Delete(int id)
+        {
+            _character.SetUserId(GetUserId());
+            var model = _character.FindCharacterById(id);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, CharacterDetailView model)
+        {
+            _character.SetUserId(GetUserId());
+            if(_character.DeleteCharacter(id))
+            {
+                TempData["SaveResult"] = "Your character was deleted";
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
+        }
+
+        private Guid GetUserId()
+        {
+            string userId = User.Claims.First(i => i.Type == ClaimTypes.NameIdentifier).Value;
+            if (userId == null) return default;
+            return Guid.Parse(userId);
+        }
+
     }
 }

@@ -22,6 +22,21 @@ namespace DungeonsAndDragons.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("CharacterEquipment", b =>
+                {
+                    b.Property<int>("CharactersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CharactersId", "InventoryId");
+
+                    b.HasIndex("InventoryId");
+
+                    b.ToTable("CharacterEquipment");
+                });
+
             modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Character", b =>
                 {
                     b.Property<int>("Id")
@@ -78,7 +93,7 @@ namespace DungeonsAndDragons.Data.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Class", b =>
+            modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Classes", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,6 +106,9 @@ namespace DungeonsAndDragons.Data.Migrations
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -98,6 +116,34 @@ namespace DungeonsAndDragons.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Classes");
+                });
+
+            modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Equipment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<double>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(10000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Weight")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
                 });
 
             modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Race", b =>
@@ -112,6 +158,9 @@ namespace DungeonsAndDragons.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -324,9 +373,24 @@ namespace DungeonsAndDragons.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("CharacterEquipment", b =>
+                {
+                    b.HasOne("DungeonsAndDragons.Data.Entity.Character", null)
+                        .WithMany()
+                        .HasForeignKey("CharactersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DungeonsAndDragons.Data.Entity.Equipment", null)
+                        .WithMany()
+                        .HasForeignKey("InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Character", b =>
                 {
-                    b.HasOne("DungeonsAndDragons.Data.Entity.Class", "Class")
+                    b.HasOne("DungeonsAndDragons.Data.Entity.Classes", "Class")
                         .WithMany("Characters")
                         .HasForeignKey("ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -394,7 +458,7 @@ namespace DungeonsAndDragons.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Class", b =>
+            modelBuilder.Entity("DungeonsAndDragons.Data.Entity.Classes", b =>
                 {
                     b.Navigation("Characters");
                 });

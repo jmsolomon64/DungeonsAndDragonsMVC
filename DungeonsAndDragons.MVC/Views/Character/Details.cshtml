@@ -1,4 +1,6 @@
-﻿@model DungeonsAndDragons.Model.Character.CharacterDetailView
+﻿@using DungeonsAndDragons.MVC.Pages.Components
+@using DungeonsAndDragons.MVC.Pages
+@model DungeonsAndDragons.Model.Character.CharacterDetailView
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +9,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>CharacterDetailView</h4>
+    <h4>CharacterDetailView #@Model.CharacterId</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -79,6 +81,10 @@
     </dl>
 </div>
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Edit" asp-route-id="@Model.CharacterId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@*Param-VariableName will bind data into component*@
+<component type="typeof(Inventory)" render-mode="ServerPrerendered" param-CharacterId=@Model.CharacterId param-Name=@Model.Name/>
+

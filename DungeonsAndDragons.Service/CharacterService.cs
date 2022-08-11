@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using DungeonsAndDragons.Data;
 using DungeonsAndDragons.Data.Entity;
 using DungeonsAndDragons.Model.Character;
 
 namespace DungeonsAndDragons.Service
 {
-    public class CharacterService
+    public class CharacterService : ICharacterService
     {
         //dependencies
         private Guid _userId;
         private readonly ApplicationDbContext _ctx;
 
-        public CharacterService(Guid userId, ApplicationDbContext context)
+        public CharacterService(ApplicationDbContext context)
         {
             _ctx = context;
         }
@@ -38,13 +39,14 @@ namespace DungeonsAndDragons.Service
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    RaceId = x.RaceId,
-                    ClassId = x.ClassId,
+                    Race = x.Race.Name,
+                    Class = x.Class.Name,
                     Level = x.Level
                 });
 
             return query.ToArray();
         }
+
 
         public bool CreateCharacter(CharacterCreate model)
         {
@@ -70,14 +72,57 @@ namespace DungeonsAndDragons.Service
             return _ctx.SaveChanges() == 1;
         }
 
+        public CharacterEdit CharacterEditGenerator(int id)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+            var model = new CharacterEdit
+            {
+                CharacterId = id,
+                Name = entity.Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+
+            return model;
+        }
+
+        public CharacterDetailView FindCharacterById(int? id)
+        {
+            if(id == null) return null;
+
+            Character entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            if (entity == null) return null;
+
+
+            return new CharacterDetailView
+            {
+                CharacterId = entity.Id,
+                Name = entity.Name,
+                Race = FindRaceById(entity.RaceId).Name,
+                Class = FindClassById(entity.ClassId).Name,
+                Level = entity.Level,
+                Strength = entity.Strength,
+                Dexterity = entity.Dexterity,
+                Consitution = entity.Consitution,
+                Inteligence = entity.Inteligence,
+                Wisdom = entity.Wisdom,
+                Charisma = entity.Charisma,
+                Description = entity.Description
+            };
+        }
+
         public Race FindRaceById(int id)
         {
             Race entity = _ctx.Races.FirstOrDefault(x => x.Id == id);
 
-            if (entity == null)
-            {
-                return null;
-            }
+            if (entity == null) return null;
 
             return entity;            
         }
@@ -92,6 +137,43 @@ namespace DungeonsAndDragons.Service
             }
 
             return entity;
+        }
+
+        public bool UpdateCharacter(CharacterEdit model)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == model.CharacterId); //Steps through context to the character by id
+
+            entity.Name = model.Name;
+            entity.Level = model.Level;
+            entity.Strength = model.Strength;
+            entity.Dexterity = model.Dexterity;
+            entity.Consitution = model.Consitution;
+            entity.Inteligence = model.Inteligence;
+            entity.Wisdom = model.Wisdom;
+            entity.Charisma = model.Charisma;
+            entity.Description = model.Description;
+
+            return _ctx.SaveChanges() == 1;
+        }
+
+        public bool DeleteCharacter(int id)
+        {
+            var entity = _ctx.Characters.FirstOrDefault(x => x.Id == id);
+
+            _ctx.Characters.Remove(entity);
+
+            return _ctx.SaveChanges() == 1;
+        }
+
+        public List<Classes> ClassesList()
+        {
+            var classList = _ctx.Classes.ToList();
+            return classList;
+        }
+        public List<Race> RacesList()
+        {
+            var raceList = _ctx.Races.ToList();
+            return raceList;
         }
     }
 }

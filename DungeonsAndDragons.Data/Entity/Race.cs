@@ -17,6 +17,9 @@ namespace DungeonsAndDragons.Data.Entity
         [MaxLength(10000)]
         public string Description { get; set; }
 
+        [Required]
+        public bool IsActive { get; set; }
+
         public ICollection<Character> Characters { get; set; } //Denotes a many relationship
 
         public Race()

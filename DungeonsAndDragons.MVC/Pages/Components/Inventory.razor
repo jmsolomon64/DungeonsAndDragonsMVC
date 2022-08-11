@@ -1,0 +1,70 @@
+﻿@using DungeonsAndDragons.Model.Equipment
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Syncfusion.Blazor.Buttons
+@using Microsoft.AspNetCore.Html 
+@inject HttpClient _client
+
+<h3>@Name Inventory</h3>
+
+
+<table class="table">
+            <thead>
+                <tr>
+                    <th>Equipment Id</th>
+                    <th>Name</th>
+                    <th>Weight</th>
+                    <th>Cost</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Items) {
+                <tr>
+                    <td>@item.EquipmentId</td>
+                    <td>@item.Name</td>
+                    <td>@item.Weight</td>
+                    <td>@item.Cost</td>
+                    <td>@item.Description</td>
+                    <td>
+                        <button @onClick="Delete(item)">Delete</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int CharacterId { get; set; }
+    [Parameter] 
+    public string Name { get; set; }
+
+    public List<EquipmentDetail> Items { get; set; } = new List<EquipmentDetail>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        FormatName();
+        Items = await GetUserItems();
+    }
+
+    private void Delete(EquipmentDetail item)
+    {
+        string equipString = "http://localhost:5091/api/Equipment/RemoveItemFromCharacter/" + CharacterId + "/" + item.EquipmentId;
+        _client.DeleteAsync(equipString);
+        StateHasChanged();
+    }
+
+    private void FormatName()
+    {
+        Name = Name + "'s";
+    }
+
+    private async Task<List<EquipmentDetail>> GetUserItems()
+    {
+        var results = JsonConvert.DeserializeObject<List<EquipmentDetail>>(await _client.GetStringAsync($"http://localhost:5091/api/Equipment/ViewCharacterItems/{CharacterId}"));
+
+        return results;
+    }
+}

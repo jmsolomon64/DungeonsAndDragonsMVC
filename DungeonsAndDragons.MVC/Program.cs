@@ -1,4 +1,5 @@
 using DungeonsAndDragons.Data;
+using DungeonsAndDragons.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,15 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+builder.Services.AddServerSideBlazor();
+
+builder.Services.AddScoped<ICharacterService, CharacterService>();
+builder.Services.AddScoped<IClassesService, ClassesService>();
+builder.Services.AddScoped<IRaceService, RaceService>();
+builder.Services.AddScoped<IEquipmentService, EquipmentService>();
+
+//Adds http client for Blazor server api calls
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -39,6 +49,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapBlazorHub();
 app.MapRazorPages();
 
 app.Run();
